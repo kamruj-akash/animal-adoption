@@ -11,7 +11,7 @@ const loadBtns = async () => {
   const btns = data.categories;
 
   btns.forEach((btn) => {
-    const newDiv = document.createElement("div");
+    const newDiv = document.createElement("button");
     newDiv.innerHTML = `
         <button
         class="btn w-[212px] h-16 flex items-center justify-center flex-row gap-3 rounded-4xl text-black text-xl border-[#0e798120] bg-transparent p-7 hover:bg-[#0e798120] hover:border-[#0E7A81]">
