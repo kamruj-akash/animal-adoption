@@ -23,5 +23,95 @@ const loadBtns = async () => {
   });
 };
 
+// loadAllCarts
+const loadAllCarts = async () => {
+  const btnContainer = getID("cart_container");
+  const url = "https://openapi.programming-hero.com/api/peddy/categories";
+  const res = await fetch(url);
+  const data = await res.json();
+  const btns = data.categories;
+};
+
+const cartsContainer = getID("cart_container");
+// all pats cart & photo
+const loadPhotos = async () => {
+  const photoContainer = getID("photo_container");
+  const url = "https://openapi.programming-hero.com/api/peddy/pets";
+  const res = await fetch(url);
+  const data = await res.json();
+  const pats = data.pets;
+  pats.forEach((pats) => {
+    // all pats cart
+    /** {
+    "petId": 1,
+    "breed": "Golden Retriever",
+    "category": "Dog",
+    "date_of_birth": "2023-01-15",
+    "price": 1200,
+    "image": "https://i.ibb.co.com/p0w744T/pet-1.jpg",
+    "gender": "Male",
+    "pet_details": "This friendly male Golden Retriever is energetic and loyal, making him a perfect companion for families. Born on January 15, 2023, he enjoys playing outdoors and is especially great with children. Fully vaccinated, he's ready to join your family and bring endless joy. Priced at $1200, he offers love, loyalty, and a lively spirit for those seeking a playful yet gentle dog.",
+    "vaccinated_status": "Fully",
+    "pet_name": "Sunny"
+} */
+    const newCart = document.createElement("div");
+    newCart.innerHTML = `
+             <div
+                class="bg-white p-4 rounded-xl shadow text-left flex flex-col gap-y-1.5"
+              >
+                <div
+                  class="h-52 bg-gray-200 rounded overflow-hidden md:h-36 flex items-center justify-center"
+                >
+                  <img class="w-full" src="${pats.image}" alt="" />
+                </div>
+                <h3
+                  onclick="modalDescription()"
+                  class="font-semibold mt-3 hover:text-[#0E7A81] hover:underline hover:cursor-pointer text-xl"
+                >
+                ${pats.pet_name}
+                </h3>
+                <p class="text-sm text-gray-500">
+                  <i class="fa-solid fa-wind"></i> Breed: ${pats.breed}
+                </p>
+                <p class="text-sm text-gray-500">
+                  <i class="fa-solid fa-calendar"></i> Birth: ${pats.date_of_birth}
+                </p>
+                <p class="text-sm text-gray-500">
+                  <i class="fa-solid fa-venus-double"></i>Gender: ${pats.gender}
+                </p>
+                <p class="text-sm text-gray-500">
+                  <i class="fa-solid fa-dollar-sign"></i> Price : ${pats.price}$
+                </p>
+                <div class="flex justify-between mt-5">
+                      <button class="btn border border-[#0e798130] bg-[#0e798105]  text-[#0E7A81] font-bold hover:bg-[#0e798144]">
+                         <i class="fa-solid fa-heart"></i>
+                      </button>
+                      <button class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
+                         Adopt
+                      </button>
+                      <button class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
+                         Details
+                      </button>
+                </div>
+              </div>
+          `;
+
+    cartsContainer.appendChild(newCart);
+
+    // pates side photo load
+    const newDiv = document.createElement("div");
+    newDiv.innerHTML = `
+     <img
+        class="rounded-xl"
+        src="${pats.image}"
+        alt="pat"
+     />
+    `;
+    photoContainer.appendChild(newDiv);
+  });
+};
+
 // default function call
 loadBtns();
+loadAllCarts();
+loadPhotos();
