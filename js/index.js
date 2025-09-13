@@ -5,14 +5,15 @@ const getID = (id) => {
 
 const cartsContainer = getID("cart_container");
 
-const fromAPI = async (id) => {
-  const url = id;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data;
-};
+// const fromAPI = async (id) => {
+//   const url = id;
+//   const res = await fetch(url);
+//   const data = await res.json();
+//   return data;
+// };
 
 // spinner control
+
 const spinnerControl = (status) => {
   const spinner = getID("spinner");
   if (status == true) {
@@ -27,12 +28,34 @@ const removeActive = () => {
   const activeBtn = document.querySelectorAll(".active_btn");
   activeBtn.forEach((btn) => {
     btn.classList.remove(
-      "bg-transparent",
+      //   "bg-transparent",
       "bg-[#0E7A81]",
       "text-white",
       "hover:bg-[#0e798120]",
       "hover:bg-[#0E7A81]"
     );
+    btn.classList.add("bg-transparent");
+  });
+};
+
+// load btns
+const loadBtns = async () => {
+  const btnContainer = getID("btn_container");
+  const url = "https://openapi.programming-hero.com/api/peddy/categories";
+  const res = await fetch(url);
+  const data = await res.json();
+  const btns = data.categories;
+
+  btns.forEach((btn) => {
+    const newDiv = document.createElement("button");
+    newDiv.innerHTML = `
+        <button id="${btn.category}_btn" onClick="showCategoryViaID('${btn.category}')"
+        class="btn w-[212px] h-16 flex items-center justify-center flex-row gap-3 rounded-4xl text-black text-xl border-[#0e798120] bg-transparent p-7 hover:bg-[#0e798120] hover:border-[#0E7A81] active_btn ">
+            <img src="${btn.category_icon}" alt="logo" class="w-8"/>
+            ${btn.category}
+         </button>
+  `;
+    btnContainer.appendChild(newDiv);
   });
 };
 
@@ -42,6 +65,7 @@ const showCategoryViaID = async (id) => {
 
   const activeBtn = getID(`${id}_btn`);
   activeBtn.classList.add("bg-[#0E7A81]", "text-white", "hover:bg-[#0E7A81]");
+  activeBtn.classList.remove("bg-transparent");
   //   const btns = document.querySelectorAll(".active_btn");
   cartsContainer.innerHTML = "";
   spinnerControl(true);
@@ -69,22 +93,32 @@ const showCategoryViaID = async (id) => {
                   <i class="fa-solid fa-wind"></i> Breed: ${pats.breed}
                 </p>
                 <p class="text-sm text-gray-500">
-                  <i class="fa-solid fa-calendar"></i> Birth: ${pats.date_of_birth}
+                  <i class="fa-solid fa-calendar"></i> Birth: ${
+                    pats.date_of_birth
+                  }
                 </p>
                 <p class="text-sm text-gray-500">
-                  <i class="fa-solid fa-venus-double"></i> Gender: ${pats.gender}
+                  <i class="fa-solid fa-venus-double"></i> Gender: ${
+                    pats.gender
+                  }
                 </p>
                 <p class="text-sm text-gray-500">
                   <i class="fa-solid fa-dollar-sign"></i> Price : ${pats.price}$
                 </p>
                 <div class="flex justify-between mt-5">
-                      <button class="btn border border-[#0e798130] bg-[#0e798105]  text-[#0E7A81] font-bold hover:bg-[#0e798144]">
+                      <button id="heart_btn${pats.petId}" onClick="heart_btn(${
+      pats.petId
+    })"  class="btn border border-[#0e798130] bg-[#0e798105]  text-[#0E7A81] font-bold hover:bg-[#0e798144]">
                          <i class="fa-solid fa-heart"></i>
                       </button>
-                      <button class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
+                      <button id="adopt_btn${pats.petId}" onClick="adoption(${
+      pats.petId
+    })"  class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
                          Adopt
                       </button>
-                      <button class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
+                      <button onClick="pet_details('${
+                        pats.petId ?? "Not Available"
+                      }')" class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
                          Details
                       </button>
                 </div>
@@ -116,27 +150,6 @@ const showCategoryViaID = async (id) => {
     `;
   }
   spinnerControl(false);
-};
-
-// load btns
-const loadBtns = async () => {
-  const btnContainer = getID("btn_container");
-  const url = "https://openapi.programming-hero.com/api/peddy/categories";
-  const res = await fetch(url);
-  const data = await res.json();
-  const btns = data.categories;
-
-  btns.forEach((btn) => {
-    const newDiv = document.createElement("button");
-    newDiv.innerHTML = `
-        <button id="${btn.category}_btn" onClick="showCategoryViaID('${btn.category}')"
-        class="btn w-[212px] h-16 flex items-center justify-center flex-row gap-3 rounded-4xl text-black text-xl border-[#0e798120] bg-transparent p-7 hover:bg-[#0e798120] hover:border-[#0E7A81] active_btn ">
-            <img src="${btn.category_icon}" alt="logo" class="w-8"/>
-            ${btn.category}
-         </button>
-  `;
-    btnContainer.appendChild(newDiv);
-  });
 };
 
 // all Pats cart & photo
@@ -197,10 +210,14 @@ const loadCartsSideIMG = async () => {
                   }$
                 </p>
                 <div class="flex justify-between mt-5">
-                      <button class="btn border border-[#0e798130] bg-[#0e798105]  text-[#0E7A81] font-bold hover:bg-[#0e798144]">
+                      <button id="heart_btn${pats.petId}" onClick="heart_btn(${
+      pats.petId
+    })"  class="btn border border-[#0e798130] bg-[#0e798105]  text-[#0E7A81] font-bold hover:bg-[#0e798144]">
                          <i class="fa-solid fa-heart"></i>
                       </button>
-                      <button class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] ">
+                      <button id="adopt_btn${pats.petId}" onClick="adoption(${
+      pats.petId
+    })"  class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144] adopt_btn">
                          Adopt
                       </button>
                       <button onClick="pet_details('${
@@ -226,6 +243,20 @@ const loadCartsSideIMG = async () => {
     `;
     photoContainer.appendChild(newDiv);
   });
+};
+
+// adoption btns function
+const adoption = (id) => {
+  const adoptBtn = getID(`adopt_btn${id}`);
+  adoptBtn.innerText = "Adopted";
+  adoptBtn.classList.add("bg-[#0E7A81]", "text-white", "hover:bg-[#0E7A81]");
+  adoptBtn.classList.remove("bg-[#0e798105]", "hover:bg-[#0e798144]");
+};
+// heart btns function
+const heart_btn = (id) => {
+  const heart_btn = getID(`heart_btn${id}`);
+  heart_btn.classList.add("bg-[#0E7A81]", "text-white", "hover:bg-[#0E7A81]");
+  heart_btn.classList.remove("bg-[#0e798105]", "hover:bg-[#0e798144]");
 };
 
 const pet_details = async (id) => {
