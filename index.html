@@ -20,6 +20,13 @@
       type="text/css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+      * {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
   </head>
   <body>
     <!-- nav -->
@@ -88,6 +95,15 @@
           <button class="btn bg-teal-700 text-white">View More</button>
         </div>
         <!-- cart container -->
+        <!-- spinner -->
+        <div id="spinner" class="hidden">
+          <div class="flex items-center justify-center">
+            <div
+              class="w-28 h-28 border-4 border-[#0E7A81] border-5 border-t-transparent rounded-full animate-spin"
+            ></div>
+          </div>
+        </div>
+
         <div class="container p-5 flex flex-col md:flex-row gap-5">
           <div
             class="w-full border border-gray-200 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-5 p-5 md:w-3/4"
@@ -96,7 +112,23 @@
           <div
             id="photo_container"
             class="w-full border border-gray-200 rounded-xl grid grid-cols-2 gap-5 p-5 md:w-1/4"
-          ></div>
+          >
+            <!-- modal -->
+            <dialog id="my_modal_1" class="modal">
+              <div class="modal-box">
+                <div id="modal_container"></div>
+                <div class="modal-action">
+                  <form method="dialog">
+                    <button
+                      class="btn border border-[#0e798130] bg-[#0e798105] text-[#0E7A81] font-bold hover:bg-[#0e798144]"
+                    >
+                      Close
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
+          </div>
         </div>
       </div>
     </section>
